@@ -1,0 +1,14 @@
+{
+  "name": "fagoc/test",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Testit\\": "app/src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^6.2@dev"
+  }
+}
