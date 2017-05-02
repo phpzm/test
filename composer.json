@@ -6,7 +6,8 @@
   "autoload": {
     "psr-4": {
       "Testit\\": "app/src/"
-    }
+    },
+    "files": ["app/bootstrap/function.php"]
   },
   "require": {
     "guzzlehttp/guzzle": "^6.2@dev"

@@ -2,6 +2,7 @@
 
 namespace Testit\Http;
 
+use GuzzleHttp\Cookie\CookieJar;
 use Testit\App;
 use GuzzleHttp\Client as Guzzle;
 
@@ -29,6 +30,11 @@ class Client extends Guzzle
      */
     public function getResponse($uri, array $body = [])
     {
-        return parent::request('POST', $uri, $body);
+        $cookies = CookieJar::fromArray(App::option('cookies'), App::option('domain'));
+
+        return parent::request('POST', $uri, [
+            'cookies' => $cookies,
+            'form_params' => $body,
+        ]);
     }
 }

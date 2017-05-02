@@ -1,10 +1,22 @@
 #!/usr/bin/php -q
 <?php
 
-use Testit\App;
-
 require_once 'vendor/autoload.php';
 
-$app = new App([]);
+use Testit\App;
+
+$app = new App([
+    'root' => __DIR__ . '/tests',
+    'domain' => 'integracao.fagoc.br',
+    'url' => 'http://integracao.fagoc.br/39/',
+    'headers' => [
+        'User-Agent' => 'testit/1.0',
+        'Accept' => 'application/json',
+        'X-Foo' => ['Bar', 'Baz']
+    ],
+    'cookies' => [
+        'siga_ppid_1' => 'NjUwMg%3D%3D'
+    ]
+]);
 
 $app->run($argv);

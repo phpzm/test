@@ -4,6 +4,7 @@ namespace Testit\Scope;
 
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
+use Testit\Http\Client;
 
 /**
  * Class Testing
@@ -24,28 +25,58 @@ class Test implements JsonSerializable
     protected $asserts = [];
 
     /**
-     * @param string $path
+     * @param string $name
      * @param Assert $assert
      */
-    protected function addAssert($path, Assert $assert)
+    protected function addAssert($name, Assert $assert)
     {
-        $this->asserts[$path] = $assert;
+        $this->asserts[$name] = $assert;
     }
 
     /**
+     * @param string $name
      * @param string $path
      * @param array $body
      * @param callable $match
      * @param array $query
      */
-    protected function add($path, $body, $match = null, $query = null)
+    protected function add($name, $path, $body, $match = null, $query = null)
     {
         if (!$match) {
             $match = function (ResponseInterface $response) use ($body) {
                 return ((string)$response->getBody()) === $body;
             };
         }
-        return $this->addAssert($path, Assert::make($query, $body, $match));
+        return $this->addAssert($name, Assert::make("Test `{$path}` in `{$this->uri}`", $path, $query, $body, $match));
+    }
+
+    /**
+     * @param Client $client
+     * @return array
+     */
+    public function run(Client $client)
+    {
+        $tests = [];
+        foreach ($this->asserts as $name => $assert) {
+            /** @var Assert $assert */
+            $status = !!$assert->resolve(
+                $client->getResponse($this->path($assert->getPath()), $assert->getBody())
+            );
+            $tests[$name] = [
+                'status' => $status,
+                'message' => $assert->getMessage()
+            ];
+        }
+        return $tests;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function path($path)
+    {
+        return $this->uri . '-' . $path;
     }
 
     /**
