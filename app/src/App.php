@@ -60,13 +60,12 @@ class App
         if ($arguments) {
             // TODO: resolve filters on run
         }
+        $tests = [];
         $client = new Client();
         foreach (new DirectoryIterator($root) as $item) {
             if ($item->isDot()) {
                 continue;
             }
-            echo "test {$item->getFilename()}", PHP_EOL;
-
             /** @noinspection PhpIncludeInspection */
             require $item->getRealPath();
 
@@ -74,8 +73,12 @@ class App
 
             /** @var Test $instance */
             $instance = new $className();
-            $result = $instance->run($client);
-            echo json_encode($result), PHP_EOL;
+            $tests = array_merge($tests, [$className => $instance->run($client)]);
+        }
+        foreach ($tests as $className => $results) {
+            foreach ($results as $name => $result) {
+                echo status($result['status']), ' ', $className . '.' . $name, ' - ', $result['message'], PHP_EOL;
+            }
         }
     }
 }
