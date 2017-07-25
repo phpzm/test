@@ -11,6 +11,7 @@
     "files": ["app/bootstrap/function.php"]
   },
   "require": {
-    "guzzlehttp/guzzle": "^6.2@dev"
+    "guzzlehttp/guzzle": "^6.2@dev",
+    "phpzm/helper": "^1.5"
   }
 }

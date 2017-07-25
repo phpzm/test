@@ -2,6 +2,8 @@
 
 namespace Testit\Scope;
 
+use Simples\Helper\Text;
+
 /**
  * Class Assert
  * @package Testit\Scope
@@ -144,7 +146,7 @@ class Assert
         if ($this->path) {
             $uri = $uri . '/' . $this->path();
         }
-        return $uri;
+        return Text::replacement($uri, Memory::all());
     }
 
     /**
@@ -164,6 +166,10 @@ class Assert
      */
     public function resolve($response)
     {
-        return call_user_func_array($this->match, [$response]);
+        $log = [];
+        $return = call_user_func_array($this->match, [$response, $log]);
+        var_dump($log);
+
+        return $return;
     }
 }

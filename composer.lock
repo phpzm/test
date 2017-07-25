@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c9f1deb304dd5294e7790db9304e4e4",
+    "content-hash": "c7e646b3e4eb4be2766ac2ccb19fc60b",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -69,7 +69,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-05-01 09:44:08"
+            "time": "2017-05-01T09:44:08+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -120,7 +120,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2017-03-28 16:54:57"
+            "time": "2017-03-28T16:54:57+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -185,7 +185,107 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "phpzm/helper",
+            "version": "1.5.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpzm/helper.git",
+                "reference": "ba2aae322070e0a80aa05b479b00900c7a780097"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpzm/helper/zipball/ba2aae322070e0a80aa05b479b00900c7a780097",
+                "reference": "ba2aae322070e0a80aa05b479b00900c7a780097",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "phpzm/kernel": "^1.8.1"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Simples\\Helper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William",
+                    "email": "wilcorrea@gmail.com"
+                },
+                {
+                    "name": "Ezio",
+                    "email": "ezioadsr@gmail.com"
+                }
+            ],
+            "description": "Simples Helper package",
+            "homepage": "https://github.com/phpzm/helper",
+            "keywords": [
+                "api",
+                "framework",
+                "php",
+                "simples"
+            ],
+            "time": "2017-07-22T18:11:07+00:00"
+        },
+        {
+            "name": "phpzm/kernel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpzm/kernel.git",
+                "reference": "0db1cf55be29ea3727c6cac0c4d44ebd4ddbcce8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpzm/kernel/zipball/0db1cf55be29ea3727c6cac0c4d44ebd4ddbcce8",
+                "reference": "0db1cf55be29ea3727c6cac0c4d44ebd4ddbcce8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Simples\\Error\\": "src/Error/",
+                    "Simples\\Kernel\\": "src/Kernel/",
+                    "Simples\\Unit\\": "src/Unit/"
+                },
+                "files": [
+                    "bootstrap/index.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William",
+                    "email": "wilcorrea@gmail.com"
+                },
+                {
+                    "name": "Ezio",
+                    "email": "ezioadsr@gmail.com"
+                }
+            ],
+            "description": "Simples Kernel package",
+            "homepage": "https://github.com/phpzm/kernel",
+            "keywords": [
+                "api",
+                "framework",
+                "php",
+                "simples"
+            ],
+            "time": "2017-07-22T18:11:21+00:00"
         },
         {
             "name": "psr/http-message",
@@ -235,7 +335,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         }
     ],
     "packages-dev": [],

@@ -2,9 +2,13 @@
 
 namespace Testit\Scope;
 
+use GuzzleHttp\Exception\BadResponseException;
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
+use Simples\Helper\JSON;
 use Testit\Http\Client;
+use Testit\Http\Headers;
+use Throwable;
 
 /**
  * Class Testing
@@ -23,6 +27,12 @@ class Test implements JsonSerializable
      * @var array
      */
     protected $asserts = [];
+
+    /**
+     * Headers to be used in requests
+     * @var Headers
+     */
+    protected $headers;
 
     /**
      * @param string $name
@@ -99,20 +109,50 @@ class Test implements JsonSerializable
     }
 
     /**
+     * @param string $method
+     * @param string $endpoint
+     * @param mixed $body
+     * @return array
+     */
+    protected function headers(string $method, string $endpoint, $body = []): array
+    {
+        if (is_null($this->headers)) {
+            return [];
+        }
+        return $this->headers->configure($method, $endpoint, $body);
+    }
+
+    /**
      * @param Client $client
      * @return array
      */
     public function run(Client $client)
     {
         $tests = [];
+        /** @var Assert $assert */
         foreach ($this->asserts as $name => $assert) {
-            /** @var Assert $assert */
-            $resolve = $client->run($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
-            $status = !!$assert->resolve($resolve);
+
+            try {
+                $headers = $this->headers($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
+
+                /** @var ResponseInterface $resolve */
+                $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
+
+            } catch (BadResponseException $error) {
+                $resolve = $error->getResponse();
+                $status = false;
+            }
+            if (!isset($status)) {
+                $status = !!$assert->resolve($resolve);
+            }
             $tests[$name] = [
-                'status' => $status,
+                'assert' => $status,
+                'method' => $assert->getMethod(),
                 'endpoint' => $assert->getEndpoint(),
-                'message' => $assert->getMessage()
+                'message' => $assert->getMessage(),
+                'status' => $resolve->getStatusCode(),
+                'headers' => $resolve->getHeaders(),
+                'response' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT),
             ];
         }
         return $tests;

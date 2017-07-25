@@ -1,20 +1,20 @@
 <?php
 
-namespace Tests\Financial;
+namespace Tests\Asserts\Financial;
 
 use Testit\Scope\Test;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class StandardHistory
+ * Class DocumentType
+ * @package Tests\Financial
  */
-class StandardHistory extends Test
+class DocumentType extends Test
 {
     /**
-     * URI base (without / at the end)
      * @var string
      */
-    protected $uri = '/v1/api/standard-history';
+    protected $uri = '/v1/financial/document-type';
 
     /**
      * CursoNatureza constructor.
@@ -22,7 +22,7 @@ class StandardHistory extends Test
     public function __construct()
     {
         $body = [
-            'hsp_descricao' => 'Teste'
+            'tpd_descricao' => 'Teste'
         ];
 
         $this->post('create', '/', $body, function (ResponseInterface $response) {

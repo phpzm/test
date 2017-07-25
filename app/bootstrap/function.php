@@ -1,14 +1,6 @@
 <?php
 
 /**
- * @return string
- */
-function path()
-{
-    return implode(DIRECTORY_SEPARATOR, func_get_args());
-}
-
-/**
  * @param bool $status
  * @return string
  */

@@ -3,9 +3,11 @@
 namespace Testit\Http;
 
 use GuzzleHttp\Cookie\CookieJar;
+use Simples\Helper\Text;
 use Testit\App;
 use GuzzleHttp\Client as Guzzle;
 use Psr\Http\Message\ResponseInterface;
+use Testit\Scope\Memory;
 
 /**
  * Class Client
@@ -14,29 +16,52 @@ use Psr\Http\Message\ResponseInterface;
 class Client extends Guzzle
 {
     /**
-     * Client constructor.
+     * @var string
      */
-    public function __construct()
+    protected $base;
+
+    /**
+     * Client constructor.
+     * @param string $base
+     * @param array $defaults
+     */
+    public function __construct(string $base, array $defaults = [])
     {
+        $this->base = $base;
+
         parent::__construct([
-            'base_uri' => App::option('url'),
-            'timeout' => 2.0,
+            'timeout' => 10,
+            'defaults' => $defaults,
         ]);
     }
 
     /**
+     * @param string $uri
+     * @return string
+     */
+    protected function uri(string $uri)
+    {
+        if (substr($uri, 0, 1) === '/') {
+            $uri = substr($uri, 1);
+        }
+        return Text::replacement($this->base . '/' . $uri, Memory::all());
+    }
+
+    /**
+     * @param array $headers
      * @param string $method
      * @param string $uri
      * @param array $body
      * @return ResponseInterface
      */
-    public function run(string $method, string $uri, array $body = [])
+    public function run(array $headers, string $method, string $uri, array $body = [])
     {
         $cookies = CookieJar::fromArray(App::option('cookies'), App::option('domain'));
 
-        return parent::request($method, $uri, [
+        return parent::request($method, $this->uri($uri), [
+            'Headers' => $headers,
             'cookies' => $cookies,
-            'form_params' => $body,
+            'json' => $body,
         ]);
     }
 }

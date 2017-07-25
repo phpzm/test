@@ -4,16 +4,22 @@
 require_once 'vendor/autoload.php';
 
 use Testit\App;
-use Tests\Financial\DocumentType;
-use Tests\Financial\StandardHistory;
+use Tests\Asserts\Financial\DocumentType;
+use Tests\Asserts\Financial\StandardHistory;
 
 $app = new App([
-    'root' => __DIR__ . '/tests',
+    'root' => __DIR__,
+    'environment' => 'contasobcontrole.com.br',
     'domain' => 'dev.contasobcontrole.com.br',
-    'url' => 'http://dev.contasobcontrole.com.br:9010/',
+    'url' => 'http://dev.contasobcontrole.com.br:9010',
     'tests' => [
         StandardHistory::class,
         DocumentType::class
+    ],
+    'defaults' => [
+        'Headers' => [
+            'Origin' => 'http://dev.contasobcontrole.com.br:9000'
+        ],
     ],
     'cookies' => []
 ]);
