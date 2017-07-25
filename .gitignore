@@ -1,3 +1,5 @@
 /.idea
 /vendor
 /logs
+/.env
+/testit.tests.php

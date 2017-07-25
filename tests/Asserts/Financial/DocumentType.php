@@ -11,6 +11,7 @@ use Testit\Cases\API;
 class DocumentType extends API
 {
     /**
+     * URI base
      * @var string
      */
     protected $uri = '/v1/financial/document-type';
@@ -22,7 +23,7 @@ class DocumentType extends API
     {
         parent::__construct([
             [
-                'tpd_descricao' => 'Teste'
+                'tpd_descricao' => 'Teste',
             ]
         ]);
     }

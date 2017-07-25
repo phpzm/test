@@ -11,19 +11,19 @@ use Testit\Cases\API;
 class StandardHistory extends API
 {
     /**
-     * URI base (without / at the end)
+     * URI base
      * @var string
      */
     protected $uri = '/v1/financial/standard-history';
 
     /**
-     * CursoNatureza constructor.
+     * StandardHistory constructor.
      */
     public function __construct()
     {
         parent::__construct([
             [
-                'hsp_descricao' => 'Teste'
+                'hsp_descricao' => 'Teste',
             ]
         ]);
     }

@@ -18,11 +18,6 @@ class API extends Test
     /**
      * @var string
      */
-    protected $uri = '/v1/financial/document-type';
-
-    /**
-     * @var string
-     */
     protected $hashKey = '_id';
 
     /**
@@ -56,17 +51,24 @@ class API extends Test
      * @param array|stdClass $data
      * @return array
      */
-    protected function validate(array $body, $data)
+    protected function compare(array $body, $data)
     {
         $errors = [];
         foreach ($body as $key => $value) {
-            if (off($data, $key) !== $value) {
-                $errors[$key] = [
-                    'expected' => $value,
-                    'given' => off($data, $key),
-                    'raw' => $data,
-                ];
+            if (off($data, $key) === $value) {
+                continue;
             }
+            $errors[$key] = [
+                'expected' => $value,
+                'given' => off($data, $key),
+            ];
+        }
+        if (count($errors)) {
+            $errors = [
+                'data' => $data,
+                'body' => $body,
+                'errors' => $errors,
+            ];
         }
         return $errors;
     }
@@ -101,7 +103,7 @@ class API extends Test
 
                 Memory::push('__id__', off($response->data, $test->hashKey()));
 
-                return $test->validate($body, $response->data);
+                return $test->compare($body, $response->data);
             });
 
             /**
@@ -110,7 +112,7 @@ class API extends Test
             $this->get('read', '/{__id__}', function (ResponseInterface $response, API $test) use ($body) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->validate($body, $response->data[0]);
+                return $test->compare($body, $response->data[0]);
             });
 
             /**
@@ -119,7 +121,7 @@ class API extends Test
             $this->put('update', '/{__id__}', $body, function (ResponseInterface $response, API $test) use ($body) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->validate($body, $response->data);
+                return $test->compare($body, $response->data);
             });
 
             /**
@@ -128,7 +130,7 @@ class API extends Test
             $this->delete('destroy', '/{__id__}', function (ResponseInterface $response, API $test) use ($body) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->validate($body, $response->data);
+                return $test->compare($body, $response->data);
             });
         }
     }

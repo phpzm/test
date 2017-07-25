@@ -157,9 +157,9 @@ class Test implements JsonSerializable
                 'assert' => $status,
                 'method' => $assert->getMethod(),
                 'endpoint' => $assert->getEndpoint(),
-                'message' => $assert->getMessage(),
                 'status' => $resolve->getStatusCode(),
                 'errors' => $errors,
+//                'message' => $assert->getMessage(),
 //                'headers' => $resolve->getHeaders(),
 //                'response' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT),
             ];
