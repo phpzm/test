@@ -4,19 +4,18 @@
 require_once 'vendor/autoload.php';
 
 use Testit\App;
+use Tests\Financial\DocumentType;
+use Tests\Financial\StandardHistory;
 
 $app = new App([
     'root' => __DIR__ . '/tests',
-    'domain' => 'integracao.fagoc.br',
-    'url' => 'http://integracao.fagoc.br/39/',
-    'headers' => [
-        'User-Agent' => 'testit/1.0',
-        'Accept' => 'application/json',
-        'X-Foo' => ['Bar', 'Baz']
+    'domain' => 'dev.contasobcontrole.com.br',
+    'url' => 'http://dev.contasobcontrole.com.br:9010/',
+    'tests' => [
+        StandardHistory::class,
+        DocumentType::class
     ],
-    'cookies' => [
-        'siga_ppid_1' => 'NjUwMg%3D%3D'
-    ]
+    'cookies' => []
 ]);
 
 $app->run($argv);

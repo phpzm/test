@@ -3,8 +3,6 @@
 namespace Testit;
 
 use Testit\Http\Client;
-use Testit\Error\ErrorDirectoryNotFound;
-use DirectoryIterator;
 use Testit\Scope\Test;
 
 /**
@@ -28,6 +26,7 @@ class App
             'root' => dirname(__DIR__, 2) . '/tests',
             'domain' => '',
             'url' => '',
+            'tests' => [],
             'headers' => [],
             'cookies' => [],
         ];
@@ -49,36 +48,27 @@ class App
 
     /**
      * @param array $arguments
-     * @throws ErrorDirectoryNotFound
+     * @SuppressWarnings("Unused")
      */
-    public function run($arguments)
+    public function run($arguments = [])
     {
-        $root = static::option('root');
-        if (!file_exists($root)) {
-            throw new ErrorDirectoryNotFound("Root `{$root}` not found");
-        }
-        if ($arguments) {
-            // TODO: resolve filters on run
-        }
+        $asserts = static::option('tests');
         $tests = [];
+
         $client = new Client();
-        foreach (new DirectoryIterator($root) as $item) {
-            if ($item->isDot()) {
-                continue;
-            }
-            /** @noinspection PhpIncludeInspection */
-            require $item->getRealPath();
-
-            $className = explode('.', $item->getFilename())[0];
-
+        foreach ($asserts as $test) {
             /** @var Test $instance */
-            $instance = new $className();
-            $tests = array_merge($tests, [$className => $instance->run($client)]);
+            $instance = new $test();
+            $result = $instance->run($client);
+            $tests[$test] = $result;
         }
-        foreach ($tests as $className => $results) {
+
+        foreach ($tests as $class => $results) {
+            echo $class, PHP_EOL;
             foreach ($results as $name => $result) {
-                echo status($result['status']), ' ', $className . '.' . $name, ' - ', $result['message'], PHP_EOL;
+                echo status($result['status']), ' ', $name, ' ', '[', $result['endpoint'], ']', PHP_EOL;
             }
+            echo '-----------------------------------------', PHP_EOL;
         }
     }
 }

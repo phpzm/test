@@ -9,68 +9,104 @@ namespace Testit\Scope;
 class Assert
 {
     /**
+     * Method what will be used to make the request
+     * @var string
+     */
+    private $method = '';
+
+    /**
+     * URI base to generate the endpoint
+     * @var string
+     */
+    private $uri = '';
+
+    /**
      * Path of resource
      * @var string
      */
-    protected $path;
+    private $path;
 
     /**
      * Parameters used in query string
      * @var array
      */
-    protected $query = [];
+    private $query = [];
 
     /**
      * Data used in body
      * @var array
      */
-    protected $body = [];
+    private $body = [];
 
     /**
      * Function match executed in response
      * @var callable
      */
-    protected $match;
+    private $match;
 
     /**
      * Message related to this test
      * @var string
      */
-    protected $message;
+    private $message;
 
     /**
      * Assert constructor.
-     * @param string $message
+     * @param string $method
+     * @param string $uri
      * @param string $path
      * @param array $query
      * @param array $body
-     * @param callable $match
+     * @param $match
+     * @param string $message
      */
-    public function __construct($message, $path, $query, $body, $match)
+    public function __construct(string $method, string $uri, string $path, array $query, array $body, $match, string $message)
     {
-        $this->message = $message;
+        $this->method = $method;
+        $this->uri = $uri;
         $this->path = $path;
         $this->query = $query;
         $this->body = $body;
         $this->match = $match;
+        $this->message = $message;
     }
 
     /**
-     * @param string $message
+     * @param string $method
+     * @param string $uri
+     * @param string $path
      * @param array $query
      * @param array $body
      * @param callable $match
      * @return Assert
+     * @internal param string $message
      */
-    public static function make($message, $path, $query, $body, $match)
+    public static function make(string $method, string $uri, string $path, array $query, array $body, $match)
     {
-        return new static($message, $path, $query, $body, $match);
+        $message = "Test `{$path}` in `{$uri}`";
+        return new static($method, $uri, $path, $query, $body, $match, $message);
     }
 
     /**
      * @return string
      */
-    public function getPath()
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -78,7 +114,7 @@ class Assert
     /**
      * @return array
      */
-    public function getQuery()
+    public function getQuery(): array
     {
         return $this->query;
     }
@@ -86,25 +122,40 @@ class Assert
     /**
      * @return array
      */
-    public function getBody()
+    public function getBody(): array
     {
         return $this->body;
     }
 
     /**
-     * @return callable
+     * @return string
      */
-    public function getMatch()
+    public function getMessage(): string
     {
-        return $this->match;
+        return $this->message;
     }
 
     /**
      * @return string
      */
-    public function getMessage()
+    public function getEndpoint()
     {
-        return $this->message;
+        $uri = $this->uri;
+        if ($this->path) {
+            $uri = $uri . '/' . $this->path();
+        }
+        return $uri;
+    }
+
+    /**
+     * @return string
+     */
+    private function path()
+    {
+        if (substr($this->path, 0, 1) === '/') {
+            return substr($this->path, 1);
+        }
+        return $this->path;
     }
 
     /**

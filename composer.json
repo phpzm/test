@@ -5,7 +5,8 @@
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
-      "Testit\\": "app/src/"
+      "Testit\\": "app/src/",
+      "Tests\\": "tests/"
     },
     "files": ["app/bootstrap/function.php"]
   },

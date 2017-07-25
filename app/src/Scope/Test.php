@@ -34,20 +34,68 @@ class Test implements JsonSerializable
     }
 
     /**
+     * @param string $method
      * @param string $name
      * @param string $path
-     * @param array $body
-     * @param callable $match
+     * @param callable|array $match
      * @param array $query
+     * @param array $body
+     * @return $this
      */
-    protected function add($name, $path, $body, $match = null, $query = null)
+    protected function add(string $method, string $name, string $path, callable $match, array $query = [], array $body = [])
     {
-        if (!$match) {
-            $match = function (ResponseInterface $response) use ($body) {
-                return ((string)$response->getBody()) === $body;
-            };
-        }
-        return $this->addAssert($name, Assert::make("Test `{$path}` in `{$this->uri}`", $path, $query, $body, $match));
+        $this->addAssert($name, Assert::make($method, $this->uri, $path, $query, $body, $match));
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @param array|null $body
+     * @param callable|null $match
+     * @param array|null $query
+     * @return Test
+     */
+    protected function post(string $name, string $path, array $body = null, callable $match = null, array $query = [])
+    {
+        return $this->add('POST', $name, $path, $match, $query, $body);
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @param callable|null $match
+     * @param array|null $query
+     * @return Test
+     */
+    protected function get(string $name, string $path, callable $match = null, array $query = [])
+    {
+        return $this->add('GET', $name, $path, $match, $query);
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @param array|null $body
+     * @param callable|null $match
+     * @param array|null $query
+     * @return Test
+     */
+    protected function put(string $name, string $path, array $body = [], callable $match = null, array $query = [])
+    {
+        return $this->add('PUT', $name, $path, $match, $query, $body);
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @param callable|null $match
+     * @param array|null $query
+     * @return Test
+     */
+    protected function delete(string $name, string $path, callable $match = null, array $query = [])
+    {
+        return $this->add('DELETE', $name, $path, $match, $query);
     }
 
     /**
@@ -59,24 +107,15 @@ class Test implements JsonSerializable
         $tests = [];
         foreach ($this->asserts as $name => $assert) {
             /** @var Assert $assert */
-            $status = !!$assert->resolve(
-                $client->getResponse($this->path($assert->getPath()), $assert->getBody())
-            );
+            $resolve = $client->run($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
+            $status = !!$assert->resolve($resolve);
             $tests[$name] = [
                 'status' => $status,
+                'endpoint' => $assert->getEndpoint(),
                 'message' => $assert->getMessage()
             ];
         }
         return $tests;
-    }
-
-    /**
-     * @param string $path
-     * @return string
-     */
-    private function path($path)
-    {
-        return $this->uri . '-' . $path;
     }
 
     /**
