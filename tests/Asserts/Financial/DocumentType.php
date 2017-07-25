@@ -2,14 +2,13 @@
 
 namespace Tests\Asserts\Financial;
 
-use Testit\Scope\Test;
-use Psr\Http\Message\ResponseInterface;
+use Testit\Cases\API;
 
 /**
  * Class DocumentType
- * @package Tests\Financial
+ * @package Tests\Asserts\Financial
  */
-class DocumentType extends Test
+class DocumentType extends API
 {
     /**
      * @var string
@@ -17,28 +16,14 @@ class DocumentType extends Test
     protected $uri = '/v1/financial/document-type';
 
     /**
-     * CursoNatureza constructor.
+     * DocumentType constructor.
      */
     public function __construct()
     {
-        $body = [
-            'tpd_descricao' => 'Teste'
-        ];
-
-        $this->post('create', '/', $body, function (ResponseInterface $response) {
-            return (string)$response->getBody();
-        });
-
-        $this->get('read', '/{id}', function (ResponseInterface $response) {
-            return (string)$response->getBody();
-        });
-
-        $this->put('update', '/{id}', $body, function (ResponseInterface $response) {
-            return (string)$response->getBody();
-        });
-
-        $this->delete('destroy', '/{id}', function (ResponseInterface $response) {
-            return (string)$response->getBody();
-        });
+        parent::__construct([
+            [
+                'tpd_descricao' => 'Teste'
+            ]
+        ]);
     }
 }

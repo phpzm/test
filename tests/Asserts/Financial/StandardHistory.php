@@ -2,16 +2,13 @@
 
 namespace Tests\Asserts\Financial;
 
-use Psr\Http\Message\ResponseInterface;
-use Simples\Helper\JSON;
-use Testit\Scope\Memory;
-use Testit\Scope\Test;
-use Tests\Headers\API;
+use Testit\Cases\API;
 
 /**
  * Class StandardHistory
+ * @package Tests\Asserts\Financial
  */
-class StandardHistory extends Test
+class StandardHistory extends API
 {
     /**
      * URI base (without / at the end)
@@ -24,78 +21,10 @@ class StandardHistory extends Test
      */
     public function __construct()
     {
-        $this->headers = new API;
-
-        $body = [
-            'hsp_descricao' => 'Teste'
-        ];
-        $hashKey = '_id';
-
-        /**
-         * search
-         */
-        $this->get('search', '/', function (ResponseInterface $response) {
-            $response = JSON::decode((string)$response->getBody());
-            return is_numeric($response->meta->total);
-        });
-
-        /**
-         * create
-         */
-        $this->post('create', '/', $body, function (ResponseInterface $response, &$log) use ($body, $hashKey) {
-            $response = JSON::decode((string)$response->getBody());
-
-            $log[] = $response->data;
-            Memory::push('__id__', off($response->data, $hashKey));
-
-            foreach ($body as $key => $value) {
-                if (off($response->data, $key) !== $value) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        /**
-         * read
-         */
-        $this->get('read', '/{__id__}', function (ResponseInterface $response) use ($body) {
-            $response = JSON::decode((string)$response->getBody());
-
-            foreach ($body as $key => $value) {
-                if (off($response->data, $key) !== $value) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        /**
-         * update
-         */
-        $this->put('update', '/{__id__}', $body, function (ResponseInterface $response) use ($body) {
-            $response = JSON::decode((string)$response->getBody());
-
-            foreach ($body as $key => $value) {
-                if (off($response->data, $key) !== $value) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        /**
-         * destroy
-         */
-        $this->delete('destroy', '/{__id__}', function (ResponseInterface $response) use ($body) {
-            $response = JSON::decode((string)$response->getBody());
-
-            foreach ($body as $key => $value) {
-                if (off($response->data, $key) !== $value) {
-                    return false;
-                }
-            }
-            return true;
-        });
+        parent::__construct([
+            [
+                'hsp_descricao' => 'Teste'
+            ]
+        ]);
     }
 }

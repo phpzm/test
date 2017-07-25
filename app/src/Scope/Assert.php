@@ -2,6 +2,7 @@
 
 namespace Testit\Scope;
 
+use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\Text;
 
 /**
@@ -161,15 +162,12 @@ class Assert
     }
 
     /**
-     * @param $response
-     * @return mixed
+     * @param ResponseInterface $response
+     * @param Test $test
+     * @return array
      */
-    public function resolve($response)
+    public function resolve(ResponseInterface $response, Test $test): array
     {
-        $log = [];
-        $return = call_user_func_array($this->match, [$response, $log]);
-        var_dump($log);
-
-        return $return;
+        return call_user_func_array($this->match, [$response, $test]);
     }
 }

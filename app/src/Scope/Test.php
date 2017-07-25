@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
 use Testit\Http\Client;
 use Testit\Http\Headers;
-use Throwable;
 
 /**
  * Class Testing
@@ -129,8 +128,11 @@ class Test implements JsonSerializable
     public function run(Client $client)
     {
         $tests = [];
+
         /** @var Assert $assert */
         foreach ($this->asserts as $name => $assert) {
+
+            $errors = null;
 
             try {
                 $headers = $this->headers($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
@@ -140,19 +142,26 @@ class Test implements JsonSerializable
 
             } catch (BadResponseException $error) {
                 $resolve = $error->getResponse();
-                $status = false;
+                $errors = [
+                  'request' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT)
+                ];
             }
-            if (!isset($status)) {
-                $status = !!$assert->resolve($resolve);
+
+            if (is_null($errors)) {
+                $errors = $assert->resolve($resolve, $this);
             }
+
+            $status = !count($errors);
+
             $tests[$name] = [
                 'assert' => $status,
                 'method' => $assert->getMethod(),
                 'endpoint' => $assert->getEndpoint(),
                 'message' => $assert->getMessage(),
                 'status' => $resolve->getStatusCode(),
-                'headers' => $resolve->getHeaders(),
-                'response' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT),
+                'errors' => $errors,
+//                'headers' => $resolve->getHeaders(),
+//                'response' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT),
             ];
         }
         return $tests;

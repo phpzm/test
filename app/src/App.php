@@ -81,6 +81,9 @@ class App
             $this->log($test, $result);
         }
 
+        echo PHP_EOL, '~> START [phpZM]', PHP_EOL;
+        echo '-----------------------------------------', PHP_EOL;
+
         foreach ($tests as $class => $results) {
             echo $class, PHP_EOL;
             foreach ($results as $name => $result) {

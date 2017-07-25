@@ -20,7 +20,6 @@ abstract class Memory
      */
     public static function push(string $index, $value)
     {
-        stop($index, $value);
         static::$bag[$index] = $value;
     }
 
