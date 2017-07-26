@@ -8,6 +8,7 @@ use Testit\App;
 use GuzzleHttp\Client as Guzzle;
 use Psr\Http\Message\ResponseInterface;
 use Testit\Scope\Memory;
+use Testit\Scope\Set;
 
 /**
  * Class Client
@@ -58,10 +59,22 @@ class Client extends Guzzle
     {
         $cookies = CookieJar::fromArray(App::option('cookies'), App::option('domain'));
 
+        if ($body instanceof Set) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $body = $body->body();
+        }
+
+        $json = [];
+        foreach ($body as $index => $value) {
+            if (gettype($value) === TYPE_ARRAY) {
+                $value = off($value, 'request');
+            }
+            $json[$index] = $value;
+        }
         return parent::request($method, $this->uri($uri), [
             'Headers' => $headers,
             'cookies' => $cookies,
-            'json' => $body,
+            'json' => $json,
         ]);
     }
 }

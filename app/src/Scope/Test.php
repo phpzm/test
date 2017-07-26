@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
+use Simples\Helper\Text;
 use Testit\Http\Client;
 use Testit\Http\Headers;
 
@@ -133,17 +134,19 @@ class Test implements JsonSerializable
         foreach ($this->asserts as $name => $assert) {
 
             $errors = null;
-
+            $body = null;
             try {
                 $headers = $this->headers($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
+                $body = $assert->getBody();
 
                 /** @var ResponseInterface $resolve */
-                $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
+                $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $body);
 
             } catch (BadResponseException $error) {
                 $resolve = $error->getResponse();
+                $string = Text::replace((string)$resolve->getBody(), '/', '\\');
                 $errors = [
-                  'request' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT)
+                  'request' => JSON::decode($string, JSON_PRETTY_PRINT)
                 ];
             }
 

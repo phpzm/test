@@ -3,6 +3,7 @@
 namespace Tests\Asserts\Registration;
 
 use Testit\Cases\API;
+use Testit\Scope\Set;
 
 /**
  * Class Client
@@ -21,10 +22,15 @@ class Client extends API
     public function __construct()
     {
         parent::__construct([
-            [
-                'pss_nome' => 'Teste',
-                'cli_observacao' => 'áàção$',
-            ]
+            Set::make([
+                'body' => [
+                    'pss_nome' => [
+                        'request' => 'Teste',
+                        'response' => 'TESTE',
+                    ],
+                    'cli_observacao' => 'áàção$',
+                ]
+            ])
         ]);
     }
 }

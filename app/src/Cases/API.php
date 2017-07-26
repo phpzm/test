@@ -3,6 +3,7 @@
 namespace Testit\Cases;
 
 use stdClass;
+use Testit\Scope\Set;
 use Testit\Scope\Test;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
@@ -47,14 +48,23 @@ class API extends Test
     }
 
     /**
-     * @param array $body
+     * @param array|Set $body
      * @param array|stdClass $data
      * @return array
      */
-    protected function compare(array $body, $data)
+    protected function compare($body, $data)
     {
         $errors = [];
+        if ($body instanceof Set) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $body = $body->body();
+        }
         foreach ($body as $key => $value) {
+
+            if (gettype($value) === TYPE_ARRAY) {
+                $value = off($value, 'response');
+            }
+
             if (off($data, $key) === $value) {
                 continue;
             }
@@ -79,6 +89,11 @@ class API extends Test
     protected function crud(array $bodies)
     {
         foreach ($bodies as $body) {
+            $set = $body;
+            if ($body instanceof Set) {
+                $body = $body->body();
+            }
+
             /**
              * search
              */
@@ -98,39 +113,39 @@ class API extends Test
             /**
              * create
              */
-            $this->post('create', '/', $body, function (ResponseInterface $response, API $test) use ($body) {
+            $this->post('create', '/', $body, function (ResponseInterface $response, API $test) use ($set) {
                 $response = JSON::decode((string)$response->getBody());
 
                 Memory::push('__id__', off($response->data, $test->hashKey()));
 
-                return $test->compare($body, $response->data);
+                return $test->compare($set, $response->data);
             });
 
             /**
              * read
              */
-            $this->get('read', '/{__id__}', function (ResponseInterface $response, API $test) use ($body) {
+            $this->get('read', '/{__id__}', function (ResponseInterface $response, API $test) use ($set) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->compare($body, $response->data[0]);
+                return $test->compare($set, $response->data[0]);
             });
 
             /**
              * update
              */
-            $this->put('update', '/{__id__}', $body, function (ResponseInterface $response, API $test) use ($body) {
+            $this->put('update', '/{__id__}', $body, function (ResponseInterface $response, API $test) use ($set) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->compare($body, $response->data);
+                return $test->compare($set, $response->data);
             });
 
             /**
              * destroy
              */
-            $this->delete('destroy', '/{__id__}', function (ResponseInterface $response, API $test) use ($body) {
+            $this->delete('destroy', '/{__id__}', function (ResponseInterface $response, API $test) use ($set) {
                 $response = JSON::decode((string)$response->getBody());
 
-                return $test->compare($body, $response->data);
+                return $test->compare($set, $response->data);
             });
         }
     }

@@ -19,4 +19,15 @@ $app = new App([
     'cookies' => []
 ]);
 
-$app->run($argv);
+try {
+    /*
+     * run the App
+     */
+    $app->run($argv);
+} catch (Throwable $error) {
+    echo PHP_EOL, 'ERROR ~> ', PHP_EOL;
+    echo '    Message .: ', $error->getMessage(), PHP_EOL;
+    echo '    File ....: ', $error->getFile(), PHP_EOL;
+    echo '    Line ....: ', $error->getLine(), PHP_EOL;
+    echo '--------------------------------------------', PHP_EOL, $error->getTraceAsString(), PHP_EOL;
+}
