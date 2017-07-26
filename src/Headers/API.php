@@ -2,14 +2,14 @@
 
 namespace Simples\Test\Headers;
 
-use Simples\Test\Http\Headers;
+use Simples\Test\Http\Header;
 use Simples\Test\Scope\Environment;
 
 /**
  * Class API
  * @package Headers
  */
-class API extends Headers
+class API extends Header
 {
     /**
      * @var array

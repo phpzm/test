@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
 use Simples\Helper\Text;
 use Simples\Test\Http\Client;
-use Simples\Test\Http\Headers;
+use Simples\Test\Http\Header;
 
 /**
  * Class Testing
@@ -30,9 +30,9 @@ class Test implements JsonSerializable
 
     /**
      * Headers to be used in requests
-     * @var Headers
+     * @var Header
      */
-    protected $headers;
+    protected $header;
 
     /**
      * @param string $name
@@ -52,8 +52,14 @@ class Test implements JsonSerializable
      * @param array $body
      * @return $this
      */
-    protected function add(string $method, string $name, string $path, callable $match, array $query = [], array $body = [])
-    {
+    protected function add(
+        string $method,
+        string $name,
+        string $path,
+        callable $match,
+        array $query = [],
+        array $body = []
+    ) {
         $this->addAssert($name, Assert::make($method, $this->uri, $path, $query, $body, $match));
         return $this;
     }
@@ -116,10 +122,10 @@ class Test implements JsonSerializable
      */
     protected function headers(string $method, string $endpoint, $body = []): array
     {
-        if (is_null($this->headers)) {
+        if (is_null($this->header)) {
             return [];
         }
-        return $this->headers->configure($method, $endpoint, $body);
+        return $this->header->configure($method, $endpoint, $body);
     }
 
     /**
@@ -146,7 +152,7 @@ class Test implements JsonSerializable
                 $resolve = $error->getResponse();
                 $string = Text::replace((string)$resolve->getBody(), '/', '\\');
                 $errors = [
-                  'request' => JSON::decode($string, JSON_PRETTY_PRINT)
+                    'request' => JSON::decode($string, JSON_PRETTY_PRINT)
                 ];
             }
 
@@ -162,8 +168,8 @@ class Test implements JsonSerializable
                 'endpoint' => $assert->getEndpoint(),
                 'status' => $resolve->getStatusCode(),
                 'errors' => $errors,
+                'headers' => $status ? [] : $resolve->getHeaders(),
 //                'message' => $assert->getMessage(),
-//                'headers' => $resolve->getHeaders(),
 //                'response' => JSON::decode((string)$resolve->getBody(), JSON_PRETTY_PRINT),
             ];
         }
@@ -177,7 +183,7 @@ class Test implements JsonSerializable
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'uri' => $this->uri,

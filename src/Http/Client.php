@@ -72,7 +72,7 @@ class Client extends Guzzle
             $json[$index] = $value;
         }
         return parent::request($method, $this->uri($uri), [
-            'Headers' => $headers,
+            'headers' => $headers,
             'cookies' => $cookies,
             'json' => $json,
         ]);

@@ -24,7 +24,7 @@ class API extends Test
     /**
      * @var Headers
      */
-    protected $headers;
+    protected $header;
 
     /**
      * API constructor.
@@ -32,7 +32,7 @@ class API extends Test
      */
     public function __construct(array $bodies = [])
     {
-        $this->headers = new Headers;
+        $this->header = new Headers;
 
         if (count($bodies)) {
             $this->crud($bodies);

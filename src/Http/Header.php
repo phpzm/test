@@ -6,7 +6,7 @@ namespace Simples\Test\Http;
  * Class Headers
  * @package Testit\Http
  */
-abstract class Headers
+abstract class Header
 {
     /**
      * @var array
