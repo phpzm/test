@@ -1,5 +1,13 @@
+# directories
 /.idea
+/.dirty
+/.docs
+/.dev
 /vendor
-/tests/logs
-/.env
-/testit.tests.php
+#/scripts
+# files
+*.cache
+sami.phar
+
+# reverse
+!*.gitkeep

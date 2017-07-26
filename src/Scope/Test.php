@@ -86,6 +86,27 @@ class Test implements JsonSerializable
     }
 
     /**
+     * @param string $method
+     * @param string $name
+     * @param string $path
+     * @param callable $match
+     * @param array $query
+     * @param array $body
+     * @return $this
+     */
+    protected function raw(
+        string $method,
+        string $name,
+        string $path,
+        callable $match,
+        array $query = [],
+        array $body = []
+    ) {
+        $this->addAssert($name, Assert::make($method, '', $path, $query, $body, $match));
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param string $path
      * @param array|null $body
