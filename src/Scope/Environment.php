@@ -60,7 +60,7 @@ abstract class Environment
      */
     public static function read()
     {
-        $filename = App::options('root') . '/' . static::$filename;
+        $filename = path(true, static::$filename);
 
         $entries = static::filter(static::environments($filename));
 
@@ -77,7 +77,7 @@ abstract class Environment
      */
     private static function write()
     {
-        $filename = App::options('root') . '/' . static::$filename;
+        $filename = path(true, static::$filename);
 
         $environments = static::environments($filename);
 
