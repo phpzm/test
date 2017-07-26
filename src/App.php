@@ -69,34 +69,54 @@ class App extends Base
      */
     public function run($arguments = [])
     {
-        $asserts = static::options('tests');
-        $tests = [];
-
-        $client = new Client(static::options('url'), static::options('defaults'));
-
-        foreach ($asserts as $test) {
-            /** @var Test $instance */
-            $instance = new $test();
-            $results = $instance->run($client);
-            $tests[$test] = $results;
-        }
+        $line = str_repeat('-', 131);
 
         echo PHP_EOL, '~> START [phpZM]', ' ';
         echo PHP_EOL, '   ', static::options('environment');
         echo PHP_EOL, '   ', static::options('url');
         echo PHP_EOL;
-        echo '-----------------------------------------', PHP_EOL;
+        echo $line, PHP_EOL;
 
-        foreach ($tests as $class => $results) {
-            echo $class, PHP_EOL;
-            foreach ($results as $name => $result) {
-                echo status($result['assert']), ' ', $result['status'], ' ', $result['method'], ' ', $name, ' ', '[', $result['endpoint'], ']', PHP_EOL;
+        $client = new Client(static::options('url'), static::options('defaults'));
+
+        $tests = 0;
+        $error = 0;
+
+        $asserts = static::options('tests');
+        foreach ($asserts as $test) {
+            /** @var Test $instance */
+            $instance = new $test();
+            $results = $instance->run($client);
+
+            echo PHP_EOL, $test, PHP_EOL;
+            echo $line, PHP_EOL;
+
+            foreach ($results as $result) {
+                $tests++;
+                $status = $result['assert'];
+                if (!$status) {
+                    $error++;
+                }
+
+                printf("| %5s | %-5s | %-10s | %-10s | %-20s | %-60s |\n",
+                    status($status),
+                    $result['status'],
+                        $result['method'],
+                        $result['time'] . 'ms',
+                        $result['name'],
+                        $result['endpoint']
+                );
             }
-            $log = $this->logger($class);
+
+            $log = $this->logger($test);
             $this->log(static::options('root') . '/' . $log, $results);
-            echo '~> ', $log, PHP_EOL;
-            echo '-----------------------------------------', PHP_EOL;
+            echo $line, PHP_EOL;
+            printf("| %-127s |\n", $log);
+            echo $line, PHP_EOL, PHP_EOL;
         }
+
+        echo '~> ', 'RESUME', PHP_EOL;
+        echo '   ', $tests, '/', $error, PHP_EOL, PHP_EOL;
     }
 
     /**

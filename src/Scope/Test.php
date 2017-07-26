@@ -35,15 +35,6 @@ class Test implements JsonSerializable
     protected $header;
 
     /**
-     * @param string $name
-     * @param Assert $assert
-     */
-    protected function addAssert($name, Assert $assert)
-    {
-        $this->asserts[$name] = $assert;
-    }
-
-    /**
      * @param string $method
      * @param string $name
      * @param string $path
@@ -60,7 +51,7 @@ class Test implements JsonSerializable
         array $query = [],
         array $body = []
     ) {
-        $this->addAssert($name, Assert::make($method, $this->uri, $path, $query, $body, $match));
+        $this->asserts[] = Assert::make($name, $method, $this->uri, $path, $query, $body, $match);
         return $this;
     }
 
@@ -81,28 +72,7 @@ class Test implements JsonSerializable
         array $query = [],
         array $body = []
     ) {
-        $this->addAssert($name, Assert::make($method, '', $path, $query, $body, $match));
-        return $this;
-    }
-
-    /**
-     * @param string $method
-     * @param string $name
-     * @param string $path
-     * @param callable $match
-     * @param array $query
-     * @param array $body
-     * @return $this
-     */
-    protected function raw(
-        string $method,
-        string $name,
-        string $path,
-        callable $match,
-        array $query = [],
-        array $body = []
-    ) {
-        $this->addAssert($name, Assert::make($method, '', $path, $query, $body, $match));
+        $this->asserts[] = Assert::make($name, $method, '', $path, $query, $body, $match);
         return $this;
     }
 
@@ -179,15 +149,21 @@ class Test implements JsonSerializable
         $tests = [];
 
         /** @var Assert $assert */
-        foreach ($this->asserts as $name => $assert) {
+        foreach ($this->asserts as $assert) {
             $errors = null;
             $body = null;
+            $start = 0;
+            $end = 0;
             try {
                 $headers = $this->headers($assert->getMethod(), $assert->getEndpoint(), $assert->getBody());
                 $body = $assert->getBody();
 
+                $start = round(microtime(true) * 1000);
+
                 /** @var ResponseInterface $resolve */
                 $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $body);
+
+                $end = round(microtime(true) * 1000);
 
             } catch (BadResponseException $error) {
                 $resolve = $error->getResponse();
@@ -195,6 +171,7 @@ class Test implements JsonSerializable
                 $errors = [
                     'request' => JSON::decode($string, JSON_PRETTY_PRINT)
                 ];
+                $end = round(microtime(true) * 1000);
             }
 
             if (is_null($errors)) {
@@ -203,8 +180,10 @@ class Test implements JsonSerializable
 
             $status = !count($errors);
 
-            $tests[$name] = [
+            $tests[] = [
                 'assert' => $status,
+                'name' => $assert->getName(),
+                'time' => $end - $start,
                 'method' => $assert->getMethod(),
                 'endpoint' => $assert->getEndpoint(),
                 'status' => $resolve->getStatusCode(),

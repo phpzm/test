@@ -88,7 +88,7 @@ class API extends Test
      */
     protected function crud(array $bodies)
     {
-        foreach ($bodies as $body) {
+        foreach ($bodies as $index => $body) {
             $set = $body;
             if ($body instanceof Set) {
                 $body = $body->body();

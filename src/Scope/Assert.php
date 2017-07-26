@@ -12,6 +12,12 @@ use Simples\Helper\Text;
 class Assert
 {
     /**
+     * Name to be outputed
+     * @var string
+     */
+    private $name = '';
+
+    /**
      * Method what will be used to make the request
      * @var string
      */
@@ -55,16 +61,18 @@ class Assert
 
     /**
      * Assert constructor.
+     * @param string $name
      * @param string $method
      * @param string $uri
      * @param string $path
      * @param array $query
      * @param array $body
-     * @param $match
+     * @param callable $match
      * @param string $message
      */
-    public function __construct(string $method, string $uri, string $path, array $query, array $body, $match, string $message)
+    public function __construct(string $name, string $method, string $uri, string $path, array $query, array $body, $match, string $message)
     {
+        $this->name = $name;
         $this->method = $method;
         $this->uri = $uri;
         $this->path = $path;
@@ -75,6 +83,7 @@ class Assert
     }
 
     /**
+     * @param string $name
      * @param string $method
      * @param string $uri
      * @param string $path
@@ -84,10 +93,18 @@ class Assert
      * @return Assert
      * @internal param string $message
      */
-    public static function make(string $method, string $uri, string $path, array $query, array $body, $match)
+    public static function make(string $name, string $method, string $uri, string $path, array $query, array $body, $match)
     {
         $message = "Test `{$path}` in `{$uri}`";
-        return new static($method, $uri, $path, $query, $body, $match, $message);
+        return new static($name, $method, $uri, $path, $query, $body, $match, $message);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -128,6 +145,14 @@ class Assert
     public function getBody(): array
     {
         return $this->body;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getMatch(): callable
+    {
+        return $this->match;
     }
 
     /**
