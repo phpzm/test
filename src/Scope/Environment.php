@@ -1,11 +1,11 @@
 <?php
 
-namespace Testit\Scope;
+namespace Simples\Test\Scope;
 
 use Simples\Error\SimplesRunTimeError;
 use Simples\Helper\File;
 use Simples\Helper\JSON;
-use Testit\App;
+use Simples\Test\App;
 
 /**
  * Class Environment
@@ -60,7 +60,7 @@ abstract class Environment
      */
     public static function read()
     {
-        $filename = App::option('root') . '/' . static::$filename;
+        $filename = App::options('root') . '/' . static::$filename;
 
         $entries = static::filter(static::environments($filename));
 
@@ -77,7 +77,7 @@ abstract class Environment
      */
     private static function write()
     {
-        $filename = App::option('root') . '/' . static::$filename;
+        $filename = App::options('root') . '/' . static::$filename;
 
         $environments = static::environments($filename);
 
@@ -121,7 +121,7 @@ abstract class Environment
     private static function filter(array $environments, int &$index = 0)
     {
         if (!static::$source) {
-            static::$source = App::option('environment');
+            static::$source = App::options('environment');
         }
         $source = static::$source;
 

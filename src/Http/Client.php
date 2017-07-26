@@ -1,14 +1,14 @@
 <?php
 
-namespace Testit\Http;
+namespace Simples\Test\Http;
 
 use GuzzleHttp\Cookie\CookieJar;
 use Simples\Helper\Text;
-use Testit\App;
+use Simples\Test\App;
 use GuzzleHttp\Client as Guzzle;
 use Psr\Http\Message\ResponseInterface;
-use Testit\Scope\Memory;
-use Testit\Scope\Set;
+use Simples\Test\Scope\Memory;
+use Simples\Test\Scope\Set;
 
 /**
  * Class Client
@@ -57,7 +57,7 @@ class Client extends Guzzle
      */
     public function run(array $headers, string $method, string $uri, array $body = [])
     {
-        $cookies = CookieJar::fromArray(App::option('cookies'), App::option('domain'));
+        $cookies = CookieJar::fromArray(App::options('cookies'), App::options('domain'));
 
         if ($body instanceof Set) {
             /** @noinspection PhpUndefinedMethodInspection */

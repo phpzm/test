@@ -1,5 +1,5 @@
 /.idea
 /vendor
-/logs
+/tests/logs
 /.env
 /testit.tests.php

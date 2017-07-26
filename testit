@@ -3,14 +3,14 @@
 
 require_once 'vendor/autoload.php';
 
-use Testit\App;
+use Simples\Test\App;
 
 $app = new App([
     'root' => __DIR__,
     'environment' => env('ENVIRONMENT'),
     'domain' => env('DOMAIN'),
     'url' => env('URL'),
-    'tests' => require __DIR__ . '/testit.tests.php',
+    'tests' => config('test.tests'),
     'defaults' => [
         'Headers' => [
             'Origin' => env('ORIGIN')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Testit\Http;
+namespace Simples\Test\Http;
 
 /**
  * Class Headers

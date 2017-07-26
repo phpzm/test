@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Headers;
+namespace Simples\Test\Headers;
 
-use Testit\Http\Headers;
-use Testit\Scope\Environment;
+use Simples\Test\Http\Headers;
+use Simples\Test\Scope\Environment;
 
 /**
  * Class API

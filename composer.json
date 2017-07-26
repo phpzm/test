@@ -1,17 +1,36 @@
 {
-  "name": "fagoc/test",
-  "type": "library",
-  "license": "MIT",
+  "name": "phpzm/test",
+  "description": "Simples Test package",
   "minimum-stability": "dev",
+  "keywords": [
+    "php",
+    "framework",
+    "api",
+    "simples",
+    "test"
+  ],
+  "homepage": "https://github.com/phpzm/test",
+  "license": "MIT",
+  "version": "0.1.0",
+  "type": "package",
+  "authors": [
+    {
+      "name": "William",
+      "email": "wilcorrea@gmail.com"
+    }
+  ],
   "autoload": {
     "psr-4": {
-      "Testit\\": "app/src/",
-      "Tests\\": "tests/"
+      "Simples\\Test\\": "src/"
     },
-    "files": ["app/bootstrap/function.php"]
+    "files": [
+      "bootstrap/index.php"
+    ]
   },
   "require": {
+    "php": ">=7.0",
     "guzzlehttp/guzzle": "^6.2@dev",
-    "phpzm/helper": "^1.5"
+    "phpzm/helper": "^1.5",
+    "phpzm/kernel": "^1.8"
   }
 }

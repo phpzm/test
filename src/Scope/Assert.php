@@ -1,6 +1,6 @@
 <?php
 
-namespace Testit\Scope;
+namespace Simples\Test\Scope;
 
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\Text;

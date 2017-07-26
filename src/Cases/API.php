@@ -1,14 +1,14 @@
 <?php
 
-namespace Testit\Cases;
+namespace Simples\Test\Cases;
 
 use stdClass;
-use Testit\Scope\Set;
-use Testit\Scope\Test;
+use Simples\Test\Scope\Set;
+use Simples\Test\Scope\Test;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
-use Testit\Scope\Memory;
-use Tests\Headers\API as Headers;
+use Simples\Test\Scope\Memory;
+use Simples\Test\Headers\API as Headers;
 
 /**
  * Class API

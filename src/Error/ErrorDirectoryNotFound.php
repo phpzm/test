@@ -1,6 +1,6 @@
 <?php
 
-namespace Testit\Error;
+namespace Simples\Test\Error;
 
 use Exception;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Testit\Scope;
+namespace Simples\Test\Scope;
 
 use GuzzleHttp\Exception\BadResponseException;
 use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\JSON;
 use Simples\Helper\Text;
-use Testit\Http\Client;
-use Testit\Http\Headers;
+use Simples\Test\Http\Client;
+use Simples\Test\Http\Headers;
 
 /**
  * Class Testing

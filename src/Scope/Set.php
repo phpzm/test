@@ -1,6 +1,6 @@
 <?php
 
-namespace Testit\Scope;
+namespace Simples\Test\Scope;
 
 /**
  * Class Set
