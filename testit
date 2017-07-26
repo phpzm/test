@@ -7,13 +7,13 @@ use Simples\Test\App;
 
 $app = new App([
     'root' => __DIR__,
-    'environment' => env('ENVIRONMENT'),
-    'domain' => env('DOMAIN'),
-    'url' => env('URL'),
+    'environment' => env('TEST_ENVIRONMENT'),
+    'domain' => env('TEST_DOMAIN'),
+    'url' => env('TEST_URL'),
     'tests' => config('test.tests'),
     'defaults' => [
         'Headers' => [
-            'Origin' => env('ORIGIN')
+            'Origin' => env('TEST_ORIGIN')
         ],
     ],
     'cookies' => []

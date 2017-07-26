@@ -32,5 +32,10 @@
     "guzzlehttp/guzzle": "^6.2@dev",
     "phpzm/helper": "^1.5",
     "phpzm/kernel": "^1.8"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "php installer.php"
+    ]
   }
 }

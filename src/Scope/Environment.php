@@ -21,7 +21,7 @@ abstract class Environment
     /**
      * @var string
      */
-    public static $filename = 'environments.json';
+    public static $filename = 'tests/environments.json';
 
     /**
      * Options of App
