@@ -2,6 +2,7 @@
 
 namespace Simples\Test\Http;
 
+use function array_merge_recursive;
 use GuzzleHttp\Cookie\CookieJar;
 use Simples\Helper\Text;
 use Simples\Test\App;
@@ -9,6 +10,7 @@ use GuzzleHttp\Client as Guzzle;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Test\Scope\Memory;
 use Simples\Test\Scope\Set;
+use function stop;
 
 /**
  * Class Client
@@ -22,6 +24,11 @@ class Client extends Guzzle
     protected $base;
 
     /**
+     * @var array
+     */
+    protected $defaults;
+
+    /**
      * Client constructor.
      * @param string $base
      * @param array $defaults
@@ -29,10 +36,11 @@ class Client extends Guzzle
     public function __construct(string $base, array $defaults = [])
     {
         $this->base = $base;
+        $this->defaults = $defaults ? $defaults : [];
 
         parent::__construct([
             'timeout' => 10,
-            'defaults' => $defaults,
+            'defaults' => $this->defaults,
         ]);
     }
 
@@ -52,10 +60,13 @@ class Client extends Guzzle
      * @param array $headers
      * @param string $method
      * @param string $uri
+     * @param string $type
      * @param array $body
+     * @param array $query
+     * @param bool $debug
      * @return ResponseInterface
      */
-    public function run(array $headers, string $method, string $uri, array $body = [])
+    public function run(array $headers, string $method, string $uri, string $type, array $body = [], array $query = [], $debug = false)
     {
         $cookies = CookieJar::fromArray(App::options('cookies'), App::options('domain'));
 
@@ -64,17 +75,21 @@ class Client extends Guzzle
             $body = $body->body();
         }
 
-        $json = [];
+        $data = [];
         foreach ($body as $index => $value) {
             if (gettype($value) === TYPE_ARRAY) {
                 $value = off($value, 'request');
             }
-            $json[$index] = $value;
+            $data[$index] = $value;
         }
-        return parent::request($method, $this->uri($uri), [
+        $settings = [
             'headers' => $headers,
+            'query' => $query,
             'cookies' => $cookies,
-            'json' => $json,
-        ]);
+            $type => $data,
+            'debug' => $debug
+        ];
+        $options = array_merge_recursive($this->defaults, $settings);
+        return parent::request($method, $this->uri($uri), $options);
     }
 }
