@@ -35,6 +35,21 @@ class Test implements JsonSerializable
     protected $header;
 
     /**
+     * @var bool
+     */
+    protected $json = true;
+
+    /**
+     * @var string
+     */
+    protected $type = 'json';
+
+    /**
+     * @var bool
+     */
+    protected $debug = false;
+
+    /**
      * @param string $method
      * @param string $name
      * @param string $path
@@ -161,15 +176,17 @@ class Test implements JsonSerializable
                 $start = round(microtime(true) * 1000);
 
                 /** @var ResponseInterface $resolve */
-                $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $body);
+                $resolve = $client->run($headers, $assert->getMethod(), $assert->getEndpoint(), $this->type, $body,
+                    $assert->getParameters(), $this->debug);
 
                 $end = round(microtime(true) * 1000);
 
             } catch (BadResponseException $error) {
                 $resolve = $error->getResponse();
                 $string = Text::replace((string)$resolve->getBody(), '/', '\\');
+                $request = $this->json ? JSON::decode($string, JSON_PRETTY_PRINT) : $string;
                 $errors = [
-                    'request' => JSON::decode($string, JSON_PRETTY_PRINT)
+                    'request' => $request
                 ];
                 $end = round(microtime(true) * 1000);
             }

@@ -38,14 +38,13 @@ class App extends Base
      *
      * @param array $options ([
      *      'root' => string,
-     *      'lang' => array,
-     *      'labels' => boolean,
-     *      'headers' => array,
-     *      'type' => string
-     *      'separator' => string
-     *      'filter' => string,
-     *      'avoid' => integer,
-     *      'strict' => boolean
+     *      'environment' => string,
+     *      'domain' => string,
+     *      'logs' => string,
+     *      'url' => string,
+     *      'tests' => array,
+     *      'defaults' => array,
+     *      'cookies' => array,
      *  ])
      */
     public function __construct($options)
