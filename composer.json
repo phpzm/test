@@ -11,7 +11,7 @@
   ],
   "homepage": "https://github.com/phpzm/test",
   "license": "MIT",
-  "version": "0.1.6",
+  "version": "0.1.10",
   "type": "package",
   "authors": [
     {
@@ -30,8 +30,8 @@
   "require": {
     "php": ">=7.0",
     "guzzlehttp/guzzle": "^6.2@dev",
-    "phpzm/helper": "^1.6.18",
-    "phpzm/kernel": "^1.11.11"
+    "phpzm/helper": "^1.6.20",
+    "phpzm/kernel": "^1.11.13"
   },
   "scripts": {
     "post-install-cmd": [
