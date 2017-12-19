@@ -2,7 +2,6 @@
 
 namespace Simples\Test\Scope;
 
-use function array_map;
 use Psr\Http\Message\ResponseInterface;
 use Simples\Helper\Text;
 
@@ -195,17 +194,5 @@ class Assert
     public function resolve(ResponseInterface $response, Test $test): array
     {
         return call_user_func_array($this->match, [$response, $test]);
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        $parameters = [];
-        foreach ($this->getQuery() as $key => $value) {
-            $parameters[$key] = Text::replacement($value, Memory::all());
-        }
-        return $parameters;
     }
 }

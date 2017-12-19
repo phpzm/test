@@ -2,7 +2,6 @@
 
 namespace Simples\Test;
 
-use Simples\Error\SimplesRunTimeError;
 use Simples\Helper\File;
 use Simples\Helper\JSON;
 use Simples\Helper\Text;
@@ -39,13 +38,14 @@ class App extends Base
      *
      * @param array $options ([
      *      'root' => string,
-     *      'environment' => string,
-     *      'domain' => string,
-     *      'logs' => string,
-     *      'url' => string,
-     *      'tests' => array,
-     *      'defaults' => array,
-     *      'cookies' => array,
+     *      'lang' => array,
+     *      'labels' => boolean,
+     *      'headers' => array,
+     *      'type' => string
+     *      'separator' => string
+     *      'filter' => string,
+     *      'avoid' => integer,
+     *      'strict' => boolean
      *  ])
      */
     public function __construct($options)
@@ -57,7 +57,6 @@ class App extends Base
      * @param string $filename
      * @param array $results
      * @return bool
-     * @throws SimplesRunTimeError
      */
     public function log(string $filename, array $results): bool
     {
@@ -66,7 +65,6 @@ class App extends Base
 
     /**
      * @param array $arguments
-     * @throws SimplesRunTimeError
      * @SuppressWarnings("Unused")
      */
     public function run($arguments = [])
@@ -90,7 +88,25 @@ class App extends Base
             $instance = new $test();
             $results = $instance->run($client);
 
-            $this->line($test, $line, $results, $tests, $error);
+            echo PHP_EOL, $test, PHP_EOL;
+            echo $line, PHP_EOL;
+
+            foreach ($results as $result) {
+                $tests++;
+                $status = $result['assert'];
+                if (!$status) {
+                    $error++;
+                }
+
+                printf("| %5s | %-5s | %-10s | %-10s | %-20s | %-60s |\n",
+                    status($status),
+                    $result['status'],
+                        $result['method'],
+                        $result['time'] . 'ms',
+                        $result['name'],
+                        $result['endpoint']
+                );
+            }
 
             $log = $this->logger($test);
             $this->log(static::options('root') . '/' . $log, $results);
@@ -110,35 +126,5 @@ class App extends Base
     private function logger(string $class): string
     {
         return static::options('logs') . '/' . Text::replace($class, '\\', '/') . '.json';
-    }
-
-    /**
-     * @param string $test
-     * @param string $line
-     * @param array $results
-     * @param int $tests
-     * @param int $error
-     */
-    private function line($test, $line, $results, &$tests, &$error)
-    {
-        echo PHP_EOL, $test, PHP_EOL;
-        echo $line, PHP_EOL;
-
-        foreach ($results as $result) {
-            $tests++;
-            $status = $result['assert'];
-            if (!$status) {
-                $error++;
-            }
-
-            printf("| %5s | %-5s | %-10s | %-10s | %-20s | %-60s |\n",
-                test_status($status),
-                $result['status'],
-                $result['method'],
-                $result['time'] . 'ms',
-                $result['name'],
-                $result['endpoint']
-            );
-        }
     }
 }
