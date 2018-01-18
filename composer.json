@@ -11,7 +11,7 @@
   ],
   "homepage": "https://github.com/phpzm/test",
   "license": "MIT",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "type": "package",
   "authors": [
     {
@@ -30,7 +30,7 @@
   "require": {
     "php": ">=7.0",
     "guzzlehttp/guzzle": "^6.2@dev",
-    "phpzm/helper": "^1.6.25",
+    "phpzm/helper": "^1.6.26",
     "phpzm/kernel": "^1.11.18"
   },
   "scripts": {
